@@ -4,6 +4,13 @@ let dead = document.getElementById("dead");
 let lost = document.getElementById("lost");
 const getHole = index => document.getElementById(`hole${index}`);
 
+function resetResults() {
+  deadCount = 0;
+  lostCount = 0;
+  dead.textContent = deadCount;
+  lost.textContent = lostCount;
+}
+
 function clickHandler() {
   if (this.className.includes("hole_has-mole")) {
     deadCount++;
@@ -11,7 +18,7 @@ function clickHandler() {
     if (deadCount === 10) {
       playin = false;
       alert("Победа!");
-      this.resetResults();
+      resetResults();
     }
   } else {
     lostCount++;
@@ -19,7 +26,7 @@ function clickHandler() {
     if (lostCount === 5) {
       playin = false;
       alert("Вы проиграли!");
-      this.resetResults();
+      resetResults();
     }
   }
 }
