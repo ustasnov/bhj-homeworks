@@ -1,4 +1,5 @@
-let counter = +document.getElementById("timer").textContent;
+const timerElement = document.getElementById("timer");
+let counter = +timerElement.textContent;
 let intervalId = null;
 
 function updateCounter() {
@@ -10,7 +11,7 @@ function updateCounter() {
       alert("Вы победили в конкурсе!");
     }
   } else {
-    document.getElementById("timer").textContent = counter;
+    timerElement.textContent = counter;
   }
 }
 
