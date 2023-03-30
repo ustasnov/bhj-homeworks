@@ -1,5 +1,5 @@
 function clickDropdownHandler(event) {
-  let parent = event.currentTarget.closest("div.dropdown");
+  const parent = event.currentTarget.closest("div.dropdown");
   if (parent) {
     const menu = parent.querySelector("ul.dropdown__list");
     if (menu) {
