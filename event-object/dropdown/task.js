@@ -19,6 +19,7 @@ function clickMenuItem(event) {
       button.click();
     }
   }
+  event.preventDefault();
 }
 
 document.querySelectorAll("div.dropdown__value")
@@ -27,5 +28,3 @@ document.querySelectorAll("div.dropdown__value")
 document.querySelectorAll("li.dropdown__item")
   .forEach(element => element.addEventListener("click", clickMenuItem));
 
-document.querySelectorAll("a.dropdown__link")
-  .forEach(element => element.setAttribute("href", "#"));
