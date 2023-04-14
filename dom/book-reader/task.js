@@ -1,53 +1,24 @@
-/*
-const book = document.getElementById("book");
-const settingButtons = Array.from(document.querySelectorAll(".font-size"));
-
-function setBookFontSize(fontSizeClass) {
-  if (book.classList.contains("font-size_small")) {
-    book.classList.remove("font-size_small");
-  } else if (book.classList.contains("font-size_big")) {
-    book.classList.remove("font-size_big");
-  }
-  if (fontSizeClass) {
-    book.classList.add(fontSizeClass);
-  }
-}
-
-function setActiveButton(buttons, activeButton, activeClass) {
-    const element = buttons.find(value => value.classList.contains("font-size_active"));
-    if (element) {
-      element.classList.remove(activeClass);
-    }
-    activeButton.classList.add(activeClass)
-    if (activeButton.classList.contains("font-size_small")) {
-      setBookFontSize("font-size_small");
-    } else if (activeButton.classList.contains("font-size_big")) {
-      setBookFontSize("font-size_big");
-    } else {
-      setBookFontSize(null);
-    }
-}
-
-function settingButtonHandler(event) {
-  const button = event.currentTarget;
-  setActiveButton(settingButtons, button, "font-size_active");
-  event.preventDefault();
-}
-
-settingButtons.forEach(element => {
-  element.addEventListener("click", settingButtonHandler);
-});
-*/
-
 class BookSettingController {
-
-  constructor(bookSetting, setting, ...settingValues) {
-    this.book = document.getElementById("book");
+  constructor(book, bookSetting, setting, settingValues) {
+    this.book = book;
     this.bookSetting = bookSetting;
+    let bookControl = document.querySelector(".book__control_" + setting);
+    let settingValueClass = "color";
+    this.activeClass = settingValueClass + "_active";
     this.setting = setting;
+    switch (setting) {
+      case "color":
+        this.setting = "text_color";
+        break;
+      case "background":
+        this.setting = "bg_color";
+        break;
+      default:
+        settingValueClass = setting;
+        this.activeClass = setting + "_active";
+    };
     this.settingValues = settingValues;
-    this.settingButtons = Array.from(document.querySelectorAll("." + setting));
-    this.activeClass = setting + "_active";
+    this.settingButtons = Array.from(bookControl.querySelectorAll("." + settingValueClass));
     this.settingButtons.forEach(element => {
       element.addEventListener("click", this.settingButtonHandler.bind(this));
     });
@@ -76,11 +47,11 @@ class BookSettingController {
     let settingValue = null;
     this.settingValues.forEach(element => {
       if (element) {
-        const settingVal = this.setting + "_" + element; 
+        const settingVal = this.setting + "_" + element;
         if (activeButton.classList.contains(settingVal)) {
-          settingValue = this.bookSetting + "-" + element; 
+          settingValue = this.bookSetting + "-" + element;
         }
-      }    
+      }
     });
     this.setBookSetting(settingValue);
   }
@@ -91,8 +62,19 @@ class BookSettingController {
   }
 }
 
-new BookSettingController("book_fs", "font-size", "small", "big", null);
-new BookSettingController("book_color", "text_color", "black", "gray", "whitesmoke");
-new BookSettingController("book_bg", "bg_color", "black", "gray", "white");
+class BookController {
+  constructor() {
+    this.book = document.getElementById("book");
+    this.bookSettings = ["book_fs", "book_color", "book_bg"];
+    this.settings = ["font-size", "color", "background"];
+    this.settingsValues = [["small", "big", null], ["black", "gray", "whitesmoke"], ["black", "gray", "white"]];
+
+    for (let i = 0; i < this.bookSettings.length; i++) {
+      new BookSettingController(this.book, this.bookSettings[i], this.settings[i], this.settingsValues[i]);
+    }
+  }
+}
+
+new BookController();
 
 
