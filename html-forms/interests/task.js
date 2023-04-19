@@ -10,9 +10,9 @@ function setParentsState() {
     checks.forEach(check => {
       if (check.checked) {
         checksCount++;
-      } 
+      }
       if (!check.indeterminate) {
-        checksLength++
+        checksLength++;
       }
     });
     checks[0].indeterminate = false;
