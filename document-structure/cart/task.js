@@ -1,6 +1,5 @@
 class BasketManager {
   constructor() {
-
     this.basketData = [];
     this.addHandlers();
   }
@@ -12,11 +11,11 @@ class BasketManager {
     }
   }
 
-  addBusketElement(id, productImage, quantity) {
+  addBasketElement(id, productImage, quantity) {
     const basketProducts = document.querySelector(".cart__products");
     let newBusketElement = basketProducts.appendChild(document.createElement("div"));
     newBusketElement.classList.add("cart__product");
-    newBusketElement.setAttribute("data-id", id);
+    newBusketElement.dataset.id = id;
     let productImageElement = newBusketElement.appendChild(document.createElement("img"));
     productImageElement.classList.add("cart__product-image");
     productImageElement.setAttribute("src", productImage);
@@ -25,44 +24,75 @@ class BasketManager {
     productQuantityElement.textContent = `${quantity}`;
   }
 
+  removeBasketElement(basketProduct) {
+    const parent = basketProduct.parentNode;
+    parent.removeChild(basketProduct);
+  }
+
   addToBasket(productElement) {
     const quantity = +productElement.querySelector(".product__quantity-value").textContent;
-    const basketElement = this.basketData.find(e => {e.id === productElement.dataset.id});
+    let basketElement = this.basketData.find(e => e.id === productElement.dataset.id);
     if (basketElement) {
       basketElement.quantity += quantity;
-      const busketProduct = document.querySelectorAll("cart__product").find(value => { value.dataset.id = productElement.dataset.id});
-      if (busketProduct) {
-        setQuantityValue(busketProduct.querySelector(".cart__product-count", true, quantity));
+      const basketProduct = Array.from(document.querySelectorAll(".cart__product"))
+        .find(e => e.dataset.id === productElement.dataset.id);
+      if (basketProduct) {
+        this.setQuantityValue(basketProduct.querySelector(".cart__product-count"), true, quantity);
       }
-      
     } else {
-      this.basketData.push({id: productElement.dataset.id, quantity: quantity});
+      this.basketData.push({ id: productElement.dataset.id, quantity: quantity });
       const productImage = productElement.querySelector(".product__image").getAttribute("src");
-      this.addBusketElement(productElement.dataset.id, productImage, quantity);
-    }  
-    
-    //element.dataset.id;
+      this.addBasketElement(productElement.dataset.id, productImage, quantity);
+    }
+    const removeButton = productElement.querySelector(".product__remove");
+    if (removeButton.classList.contains("product__remove-hidden")) {
+      removeButton.classList.remove("product__remove-hidden");
+    }
+  }
+
+  removeFromBasket(productElement) {
+    const quantity = +productElement.querySelector(".product__quantity-value").textContent;
+    let basketElement = this.basketData.find(e => e.id === productElement.dataset.id);
+    if (basketElement.quantity <= quantity) {
+      this.basketData.splice(this.basketData.indexOf(basketElement), 1);
+      const basketProduct = Array.from(document.querySelectorAll(".cart__product"))
+        .find(e => e.dataset.id === productElement.dataset.id);
+      this.removeBasketElement(basketProduct);
+      const removeButton = productElement.querySelector(".product__remove");
+      removeButton.classList.add("product__remove-hidden");
+    } else {
+      basketElement.quantity -= quantity;
+      const basketProduct = Array.from(document.querySelectorAll(".cart__product"))
+        .find(e => e.dataset.id === productElement.dataset.id);
+      this.setQuantityValue(basketProduct.querySelector(".cart__product-count"), false, quantity);
+    }
   }
 
   addHandlers() {
     const incButtons = document.querySelectorAll(".product__quantity-control_inc");
-
     incButtons.forEach(element => {
-      element.addEventListener('click', 
+      element.addEventListener('click',
         event => this.setQuantityValue(event.currentTarget.parentElement.querySelector(".product__quantity-value")));
     });
 
-
     const decButtons = document.querySelectorAll(".product__quantity-control_dec");
     decButtons.forEach(element => {
-      element.addEventListener('click', 
+      element.addEventListener('click',
         event => this.setQuantityValue(event.currentTarget.parentElement.querySelector(".product__quantity-value"), false));
     });
 
     const addBasketButtons = document.querySelectorAll(".product__add");
+    const bindAddFunction = this.addToBasket.bind(this);
     addBasketButtons.forEach(element => {
-      element.addEventListener('click', 
-        event => this.addToBasket(event.currentTarget.closest(".product")));
+      element.addEventListener('click',
+        event => bindAddFunction(event.currentTarget.closest(".product")));
+    });
+
+    const removeFromBasketButtons = document.querySelectorAll(".product__remove");
+    const bindRemoveFunction = this.removeFromBasket.bind(this);
+    removeFromBasketButtons.forEach(element => {
+      element.addEventListener('click',
+        event => bindRemoveFunction(event.currentTarget.closest(".product")));
     });
 
   }

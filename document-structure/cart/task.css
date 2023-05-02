@@ -1,6 +1,7 @@
 body {
   font-family: Arial;
 }
+
 .cart__products {
   display: flex;
   justify-content: center;
@@ -10,6 +11,7 @@ body {
 .cart__product {
   position: relative;
 }
+
 .cart__product-count {
   position: absolute;
   top: 0;
@@ -26,11 +28,13 @@ body {
   height: 100px;
   object-fit: contain;
 }
+
 .product {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
 }
+
 .product__title {
   width: 100%;
   text-transform: uppercase;
@@ -88,4 +92,21 @@ body {
 
 .product-shadow {
   position: absolute;
+}
+
+.product__remove {
+  background: red;
+  margin-top: 10px;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.product__remove:hover {
+  opacity: 0.8;
+}
+
+.product__remove-hidden {
+  display: none;
 }
