@@ -54,29 +54,46 @@ class BasketManager {
     }
   }
 
-  /*
   moveProductImage(productImage, basketImage) {
-    if(productImage && basketImage) {
+    if (productImage && basketImage) {
+      const productImageBound = productImage.getBoundingClientRect();
+      const basketImageBound = basketImage.getBoundingClientRect();
+      const Y = productImageBound.top - basketImageBound.top - 32;
+      const X = basketImageBound.left - productImageBound.left;
+      const speed = 8;
+      let stepX = speed;
+      let stepY = speed;
+      if (Y > X) {
+        stepY = Y * speed / X;
+      } else if (Y < X) {
+        stepX = X * speed / Y;
+      } 
 
-      let beginTop = productImage.getBoundingClientRect().top;
-      let endTop = basketImage.getBoundingClientRect().top;
-      let width = productImage.getBoundingClientRect().width;
-      let height = productImage.getBoundingClientRect().height;
-      let beginLeft = productImage.getBoundingClientRect().left;
-      let endLeft = basketImage.getBoundingClientRect().left;
-      let dimY = beginTop - endTop;
-      let dimX = endLeft - beginLeft;
-      const step = 15;
-      const cloneElement = productImage.cloneNode(false);
-      document.querySelector("body").appendChild(cloneElement);
-      cloneElement.style.position = "absolute";
-      cloneElement.style.top = `${Math.floor(beginTop + step)}`;
-      cloneElement.style.left = `${Math.floor(beginLeft + step)}`;
-      cloneElement.width = `${Math.floor(width)}`;
-      cloneElement.height = `${Math.floor(height)}`;
+      let currentTop = productImageBound.top;
+      let currentLeft = productImageBound.left;
+      let cloneElement = null;
+
+      let interavalId = setInterval(() => {
+        if (currentTop > (basketImageBound.top - 32) && currentLeft < basketImageBound.left) {
+          currentTop -= stepY;
+          currentLeft += stepX;
+          if (cloneElement) {
+            cloneElement.remove();
+          }
+          cloneElement = productImage.cloneNode(false);
+          cloneElement.style.position = "absolute";
+          cloneElement.style.top = `${Math.round(currentTop)}px`;
+          cloneElement.style.left = `${Math.round(currentLeft)}px`;
+          document.querySelector("body").appendChild(cloneElement);
+        } else {
+          if (cloneElement) {
+            cloneElement.remove();
+          }
+          clearInterval(interavalId);
+        }
+      }, 3);
     }
   }
-  */
 
   addBasketElement(id, productImage, quantity) {
     const basketProducts = document.querySelector(".cart__products");
@@ -113,7 +130,7 @@ class BasketManager {
         if (basketProduct) {
           const productImage = productElement.querySelector(".product__image");
           const basketImage = basketProduct.querySelector(".cart__product-image");
-          //this.moveProductImage(productImage, basketImage);
+          this.moveProductImage(productImage, basketImage);
           this.setQuantityValue(basketProduct.querySelector(".cart__product-count"), true, quantity);
         }
       } else {

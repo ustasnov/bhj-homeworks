@@ -31,7 +31,7 @@ function showTooltip(element) {
 
 hrefs.forEach(element => {
   element.addEventListener('click', event => {
-    showTooltip(element);
+    showTooltip(event.currentTarget);
     event.preventDefault();
   });
 });
