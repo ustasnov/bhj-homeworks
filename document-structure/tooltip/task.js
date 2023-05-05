@@ -1,27 +1,38 @@
 const hrefs = document.querySelectorAll("a.has-tooltip");
+const tooltipElementText =
+  `<div class="tooltip" style="left: 0; top: 0">
+      Проверка!
+    </div>`;
+
+const tooltip = addTooltipElement(hrefs[0]);
+let currentElement = null;
 
 function addTooltipElement(element) {
-  const bound = element.getBoundingClientRect();
-  let tooltipElementText = 
-  `<div class="tooltip" style="left: ${Math.floor(bound.left)}; top: 0">
-    ${element.getAttribute("title")}
-  </div>`;
   element.insertAdjacentHTML("afterEnd", tooltipElementText);
+  return document.querySelector(".tooltip");
 }
 
 function showTooltip(element) {
-  Array.from(document.querySelectorAll(".tooltip")).forEach(e => {
-    if (e.classList.contains("tooltip_active")) {
-      e.classList.remove("tooltip_active");
+  const bound = element.getBoundingClientRect();
+
+  if (currentElement === element) {
+    tooltip.classList.toggle("tooltip_active");
+  } else {
+    if (currentElement) {
+      currentElement.classList.remove("tooltip_active");
     }
-  });
-  element.nextSibling.classList.add("tooltip_active");
+    tooltip.classList.add("tooltip_active");
+  }
+  tooltip.style.top = `${Math.floor(bound.bottom)}px`;
+  tooltip.style.left = `${Math.floor(bound.left)}px`;
+  tooltip.textContent = element.getAttribute("title");
+  currentElement = element;
 }
 
 hrefs.forEach(element => {
-    addTooltipElement(element);
-    element.addEventListener('click', event => {
-      showTooltip(element);
-      event.preventDefault();
-    });
+  element.addEventListener('click', event => {
+    showTooltip(element);
+    event.preventDefault();
+  });
 });
+
