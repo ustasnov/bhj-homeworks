@@ -54,7 +54,7 @@ function saveValutes() {
   }
 }
 
-localStorage.removeItem("ValutesData");
+//localStorage.removeItem("ValutesData");
 loadValutes();
 if (!valutes) {
   let xhr = new XMLHttpRequest();
