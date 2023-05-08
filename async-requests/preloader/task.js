@@ -45,7 +45,7 @@ function saveValutes() {
     try {
       localStorage.setItem("ValutesData", valutesData);
     } catch (e) {
-      if (e == QUOTA_EXCEEDED_ERR) {
+      if (e === QUOTA_EXCEEDED_ERR) {
         console.log('Превышен лимит выделенного пространства для локального хранилища!');
       }
     }
@@ -54,14 +54,14 @@ function saveValutes() {
   }
 }
 
-//localStorage.removeItem("ValutesData");
+localStorage.removeItem("ValutesData");
 loadValutes();
 if (!valutes) {
   let xhr = new XMLHttpRequest();
   xhr.open("GET", "https://students.netoservices.ru/nestjs-backend/slow-get-courses");
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.addEventListener("readystatechange", () => {
-    if (xhr.readyState === xhr.DONE) {
+    if (xhr.readyState === xhr.DONE && xhr.status === 200) {
       const responseData = JSON.parse(xhr.responseText);
       if (responseData) {
         valutes = responseData.response.Valute;
