@@ -4,11 +4,23 @@ const signinElement = document.getElementById("signin");
 const userIdElement = document.getElementById("user_id");
 const loginElement = document.getElementsByName("login");
 const passwordElement = document.getElementsByName("password");
+const deauthButton = document.getElementById("deauth");
 
 function showWelcome(id) {
   signinElement.classList.remove("signin_active");
   userIdElement.textContent = `${id}`;
   welcomeElement.classList.add("welcome_active");
+  deauthButton.classList.add("deauth_active");
+}
+
+function showAuthForm() {
+  welcomeElement.classList.remove("welcome_active");
+  deauthButton.classList.remove("deauth_active");
+  userIdElement.textContent = "";
+  loginElement[0].value = "";
+  passwordElement[0].value = "";
+  signinElement.classList.add("signin_active");
+  localStorage.removeItem("authUserId");
 }
 
 signingForm.addEventListener("submit", event => {
@@ -22,17 +34,18 @@ signingForm.addEventListener("submit", event => {
       if (data.success) {
         showWelcome(data.user_id);
         localStorage.setItem("authUserId", `${data.user_id}`);
-      } else {        
+      } else {
         alert("Неверный логин/пароль!");
       }
-      loginElement[0].value = "";
-      passwordElement[0].value = "";
     }
-
   });
 
   request.send(formData);
   event.preventDefault();
+});
+
+deauthButton.addEventListener("click", event => {
+  showAuthForm();
 });
 
 const id = localStorage.getItem("authUserId");
