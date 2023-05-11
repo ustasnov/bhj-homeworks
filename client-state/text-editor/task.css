@@ -8,3 +8,11 @@ textarea {
   border: 1px solid #e2e2e2;
   box-sizing: border-box;
 }
+
+.btn {
+  display: block;
+  padding: 10px 10px;
+  margin: 20px 0 0;
+  max-width: 100%;
+  width: 100%
+}
